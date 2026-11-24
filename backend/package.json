@@ -1,0 +1,21 @@
+{
+  "name": "sportsphere-backend",
+  "version": "1.0.0",
+  "description": "REST API for Sportsphere: GNews integration, caching and MongoDB storage",
+  "private": true,
+  "type": "module",
+  "main": "src/server.js",
+  "engines": { "node": ">=18.17" },
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "helmet": "^8.0.0",
+    "mongoose": "^8.9.5"
+  }
+}

@@ -1,0 +1,44 @@
+# Render Blueprint: one API (web service) + one React site (static site).
+# Deploy: push this repo to GitHub, then Render > New > Blueprint > select the repo.
+services:
+  - type: web
+    name: sportsphere-api
+    runtime: node
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /api/health
+    plan: free
+    envVars:
+      - key: NODE_VERSION
+        value: 22
+      - key: NODE_ENV
+        value: production
+      - key: GNEWS_LANG
+        value: en
+      - key: CACHE_TTL_SECONDS
+        value: 3600
+      - key: HOME_SECTIONS
+        value: cricket,football,basketball,tennis
+      - key: GNEWS_API_KEY      # secret: Render asks for it when you create the Blueprint
+        sync: false
+      - key: MONGODB_URI        # secret: your MongoDB Atlas connection string
+        sync: false
+      - key: CLIENT_ORIGIN      # the static site's URL, e.g. https://sportsphere-web.onrender.com (no trailing slash)
+        sync: false
+
+  - type: web
+    name: sportsphere-web
+    runtime: static
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    envVars:
+      - key: NODE_VERSION
+        value: 22
+      - key: VITE_API_URL       # the API's URL + /api, e.g. https://sportsphere-api.onrender.com/api
+        sync: false
+    routes:
+      - type: rewrite           # lets /category/cricket and /article/... work on refresh
+        source: /*
+        destination: /index.html
